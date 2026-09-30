@@ -1,0 +1,37 @@
+{
+  "thingId": "lower_lab:<имя-двойника>",
+  "policyId": "lower_lab:lorawan-meter",
+  "attributes": {
+    "name": "<Название>",
+    "description": "<Канал и счётчик>",
+    "image": "",
+    "_isType": false
+  },
+  "features": {
+    "voltage_a_v": {
+      "properties": {
+        "value": 0
+      }
+    },
+    "current_a_a": {
+      "properties": {
+        "value": 0
+      }
+    },
+    "active_power_w": {
+      "properties": {
+        "value": 0
+      }
+    },
+    "power_factor_total": {
+      "properties": {
+        "value": 0
+      }
+    },
+    "active_energy_positive_kwh": {
+      "properties": {
+        "value": 0
+      }
+    }
+  }
+}

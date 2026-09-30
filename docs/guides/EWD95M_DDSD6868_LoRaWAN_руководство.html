@@ -1,0 +1,323 @@
+<title>EWD95M ↔ DDSD6868 по LoRaWAN</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#F4F5F7; --surface:#FFFFFF; --ink:#1B2430; --muted:#5B6675; --line:#D6DBE2;
+  --accent:#C4780F; --accent-ink:#7A4A05; --accent-soft:#FBF1DE;
+  --warn:#B23A2C; --warn-soft:#F9E7E4; --ok:#2C7A4B; --ok-soft:#E3F2E8;
+  --code-bg:#EEF0F3; --code-ink:#1B2430;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#131920; --surface:#1B232D; --ink:#E6EAF0; --muted:#9AA5B3; --line:#2E3A47;
+    --accent:#E9A83A; --accent-ink:#F3C97A; --accent-soft:#2C2416;
+    --warn:#E07A6C; --warn-soft:#33201D; --ok:#6CC08C; --ok-soft:#1C2E23;
+    --code-bg:#0F141A; --code-ink:#DDE3EA;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#131920; --surface:#1B232D; --ink:#E6EAF0; --muted:#9AA5B3; --line:#2E3A47;
+  --accent:#E9A83A; --accent-ink:#F3C97A; --accent-soft:#2C2416;
+  --warn:#E07A6C; --warn-soft:#33201D; --ok:#6CC08C; --ok-soft:#1C2E23;
+  --code-bg:#0F141A; --code-ink:#DDE3EA;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1100px;margin:0 auto;padding:40px 24px 80px;display:grid;grid-template-columns:220px minmax(0,1fr);gap:48px}
+nav{position:sticky;top:24px;align-self:start;font-size:14px}
+nav .eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+nav a{display:block;color:var(--ink);text-decoration:none;padding:6px 0;border-left:2px solid var(--line);padding-left:12px}
+nav a:hover,nav a:focus-visible{border-left-color:var(--accent);outline:none}
+nav a.sub{font-size:13px;color:var(--muted);padding-left:24px}
+main{max-width:72ch}
+h1{font-size:34px;line-height:1.15;font-weight:700;margin:0 0 8px;text-wrap:balance}
+.lead{color:var(--muted);font-size:17px;margin:0 0 28px}
+h2{font-size:24px;font-weight:600;margin:56px 0 12px;padding-top:20px;border-top:1px solid var(--line);text-wrap:balance}
+h2 .step{display:inline-block;font:500 12px/1 "IBM Plex Mono",monospace;letter-spacing:.1em;color:var(--accent-ink);background:var(--accent-soft);padding:6px 8px;border-radius:3px;margin-right:10px;vertical-align:middle}
+h3{font-size:18px;font-weight:600;margin:28px 0 8px}
+p{margin:0 0 14px}
+ul,ol{margin:0 0 14px;padding-left:22px}
+li{margin:4px 0}
+code{font:14px "IBM Plex Mono",ui-monospace,Consolas,monospace;background:var(--code-bg);color:var(--code-ink);padding:1px 5px;border-radius:3px}
+pre{background:var(--code-bg);color:var(--code-ink);padding:14px 16px;border-radius:4px;overflow-x:auto;font:13.5px/1.5 "IBM Plex Mono",ui-monospace,Consolas,monospace;margin:0 0 16px;border:1px solid var(--line)}
+pre code{background:none;padding:0;font-size:inherit}
+table{border-collapse:collapse;width:100%;margin:0 0 16px;font-size:14.5px;font-variant-numeric:tabular-nums}
+.tbl{overflow-x:auto;margin:0 0 16px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-weight:600;font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+td code{white-space:nowrap}
+.note{border-left:3px solid var(--accent);background:var(--accent-soft);padding:12px 16px;border-radius:0 4px 4px 0;margin:0 0 18px}
+.warn{border-left:3px solid var(--warn);background:var(--warn-soft);padding:12px 16px;border-radius:0 4px 4px 0;margin:0 0 18px}
+.ok{border-left:3px solid var(--ok);background:var(--ok-soft);padding:12px 16px;border-radius:0 4px 4px 0;margin:0 0 18px}
+.note strong,.warn strong,.ok strong{display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+.warn strong{color:var(--warn)} .note strong{color:var(--accent-ink)} .ok strong{color:var(--ok)}
+.frame{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:6px;margin:0 0 16px}
+.frame div{background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:8px 10px}
+.frame b{display:block;font:500 15px "IBM Plex Mono",monospace;color:var(--accent-ink)}
+.frame span{font-size:12px;color:var(--muted)}
+.check{list-style:none;padding:0}
+.check li{padding-left:26px;position:relative}
+.check li::before{content:"";position:absolute;left:0;top:7px;width:14px;height:14px;border:1.5px solid var(--muted);border-radius:3px}
+@media (max-width:820px){.wrap{grid-template-columns:1fr;gap:24px}nav{position:static}}
+</style>
+
+<div class="wrap">
+<nav>
+  <div class="eyebrow">Содержание</div>
+  <a href="#before">Перед началом</a>
+  <a href="#s1">Шаг 1. RS-485 и Modbus</a>
+  <a class="sub" href="#s1-port">Параметры порта</a>
+  <a class="sub" href="#s1-reg">Регистр энергии</a>
+  <a class="sub" href="#s1-dtu">Опрос из модема</a>
+  <a href="#s2">Шаг 2. LoRaWAN и Вега БС-1.2</a>
+  <a class="sub" href="#s2-keys">Ключи OTAA</a>
+  <a class="sub" href="#s2-at">AT-команды</a>
+  <a class="sub" href="#s2-server">Сервер и шлюз</a>
+  <a href="#s3">Шаг 3. Декодер payload</a>
+  <a href="#ot">Мост в OpenTwins</a>
+</nav>
+
+<main>
+<h1>Опрос DDSD6868 через Ebyte EWD95M по LoRaWAN</h1>
+<p class="lead">Счётчик CHZSJ DDSD6868 → RS-485 (Modbus RTU) → контроллер опроса → DTU Ebyte EWD95M → радио RU864 → базовая станция Вега БС-1.2 → сетевой сервер → JSON.</p>
+
+<div class="warn"><strong>Два условия, без которых ничего не заработает</strong>
+1. Модем должен работать в плане <b>RU864</b>. Проверено: EWD95M его поддерживает, регион переключён с EU868 на RU864 и сохранён.<br>
+2. Карта регистров DDSD6868 у производителя 浙江虹吉电气 не опубликована в стандартном виде, в сети встречаются разные варианты. Адреса ниже — типовые для этой серии, их нужно подтвердить по паспорту или проверкой из раздела «Как убедиться».</div>
+
+<h2 id="before">Перед началом</h2>
+<ul class="check">
+  <li>Счётчик запитан: фаза в клемму 1, ноль в клемму 3, дисплей показывает ~220 В.</li>
+  <li>RS-485 счётчика: клемма <b>6 = A</b>, клемма <b>5 = B</b>. Импульсный выход (1 = P+, 2 = P−) не используем.</li>
+  <li>Под рукой USB-RS485 адаптер (COM5) — им проверяем счётчик до того, как трогать модем.</li>
+  <li>Известны DevEUI / JoinEUI / AppKey модема (наклейка, паспорт или чтение через AT).</li>
+  <li>БС-1.2 в сети и видна в сетевом сервере (ChirpStack или IOT Vega Server) с планом RU864.</li>
+</ul>
+
+<h2 id="s1"><span class="step">ШАГ 1</span>RS-485 и Modbus: опрос счётчика</h2>
+
+<h3 id="s1-port">Параметры последовательного порта</h3>
+<p>Китайские DIN-счётчики этого класса поставляются с двумя протоколами. Заводские значения по умолчанию:</p>
+<div class="tbl"><table>
+<tr><th>Протокол</th><th>Скорость</th><th>Кадр</th><th>Адрес</th></tr>
+<tr><td>Modbus RTU</td><td>9600</td><td>8 N 1</td><td>1 (иногда 2 последние цифры номера)</td></tr>
+<tr><td>DL/T645-2007</td><td>2400</td><td>8 E 1</td><td>12 цифр номера: <code>002511262172</code></td></tr>
+</table></div>
+<p>Фактические значения смотри в меню счётчика: кнопка <b>Menu</b>, пункты «通讯地址» (адрес) и «波特率» (скорость). Если в меню есть выбор протокола («通讯协议»: 645 / Modbus), выбери Modbus.</p>
+
+<h3 id="s1-reg">Регистр общей активной энергии</h3>
+<p>Наиболее распространённая карта для однофазных DDSD/DDS с Modbus (вариант A) и альтернативная (вариант B), встречающаяся у той же серии:</p>
+<div class="tbl"><table>
+<tr><th>Параметр</th><th>Вариант A</th><th>Вариант B</th><th>Формат</th></tr>
+<tr><td>Общая активная энергия, кВт·ч</td><td><code>0x0000</code> (2 рег.)</td><td><code>0x0100</code> (2 рег.)</td><td>uint32 × 0.01 или float32</td></tr>
+<tr><td>Напряжение, В</td><td><code>0x0008</code></td><td><code>0x0200</code></td><td>uint16 × 0.1</td></tr>
+<tr><td>Ток, А</td><td><code>0x0009</code></td><td><code>0x0201</code></td><td>uint16 × 0.01 (или ×0.001)</td></tr>
+<tr><td>Активная мощность, Вт</td><td><code>0x000A</code></td><td><code>0x0202</code></td><td>uint16 / uint32</td></tr>
+<tr><td>Частота, Гц</td><td><code>0x000C</code></td><td><code>0x0205</code></td><td>uint16 × 0.01</td></tr>
+</table></div>
+
+<p><b>Структура запроса</b> (функция 03 «Read Holding Registers», адрес 1, регистр 0x0000, 2 регистра):</p>
+<div class="frame">
+  <div><b>01</b><span>адрес счётчика</span></div>
+  <div><b>03</b><span>функция</span></div>
+  <div><b>00 00</b><span>старт. регистр</span></div>
+  <div><b>00 02</b><span>кол-во регистров</span></div>
+  <div><b>C4 0B</b><span>CRC16 (lo, hi)</span></div>
+</div>
+<pre><code>Запрос:            01 03 00 00 00 02 C4 0B
+Ответ (uint32):    01 03 04 00 01 E2 40 E2 A3   → 0x0001E240 = 123456 → ×0.01 = 1234.56 кВт·ч
+Ответ (float32):   01 03 04 44 9A 51 EC F2 F1   → IEEE754 BE = 1234.56 кВт·ч</code></pre>
+<p>Если счётчик отвечает исключением <code>01 83 02 ...</code>, регистра нет — переходи к варианту B. Если молчит на 03, попробуй функцию 04 (Input Registers): часть прошивок отдаёт измерения только через неё.</p>
+
+<div class="note"><strong>Как убедиться, не гадая</strong>
+Подключи клеммы 6 → A и 5 → B адаптера COM5 и запусти <code>Счетчик\ddsd6868_scan.py</code>. Скрипт перебирает скорости, адреса и функции, затем читает регистры 0x0000–0x00FF и печатает каждое слово как uint16 / uint32 / float32. Ищи в выводе число, совпадающее с дисплеем: ~2200 (напряжение ×0.1), 5000 (частота ×0.01) и показание энергии. Так адрес и формат регистра энергии становятся фактом, а не предположением. Если Modbus молчит совсем, скрипт пробует DL/T645 и выводит адрес счётчика.</div>
+
+<h3 id="s1-dtu">Кто опрашивает счётчик: что умеет и чего не умеет EWD95M</h3>
+<div class="warn"><strong>Проверено на самом модуле</strong>
+Прошивка EWD95M (STM32 LoRaMac AT-набор Ebyte, команды с префиксом <code>AT+C…</code>) не содержит ни режима Modbus-мастера, ни таймера автоопроса, ни списка команд. Модем умеет отправить в эфир то, что ему дали командой <code>AT+SEND</code>, и принять downlink. Значит, запрос к счётчику должен формировать кто-то ещё.</div>
+<p>Два рабочих варианта, оба с тем же декодером из шага 3:</p>
+<div class="tbl"><table>
+<tr><th>Вариант</th><th>Как работает</th><th>Плюсы / минусы</th></tr>
+<tr><td><b>A. Контроллер между счётчиком и модемом</b> (рекомендуется)</td><td>ESP32 (или любой MCU) по RS-485 раз в час шлёт счётчику Modbus-запрос, получает ответ и отдаёт его модему через UART командой <code>AT+SEND=2:1:0:&lt;hex ответа&gt;</code>. Модем в классе A, спит между отправками.</td><td>Надёжно, автономно, интервал любой. Нужен один ESP32 с MAX485 (такой уже читает печной счётчик). Модем и ESP32 связаны по UART (TTL) или RS-485.</td></tr>
+<tr><td><b>B. Опрос из сервера через downlink</b></td><td>Модем в классе C, к RS-485 подключён только счётчик. Сервер по расписанию шлёт downlink с Modbus-запросом, модем выводит его в RS-485, ответ счётчика уходит uplink'ом.</td><td>Без дополнительного железа, но требует класса C (модем всегда слушает эфир, питание от сети) и проверки, что прошивка выводит принятый downlink в порт «как есть», а не как текст <code>+RECV:…</code>. На столе это не подтверждено.</td></tr>
+</table></div>
+<p>Порт модема для обоих вариантов: <code>AT+UART=?</code> вернул <code>2:0</code>, то есть 9600 бод без чётности. Счётчик по Modbus тоже 9600 8N1, поэтому в варианте B скорости совпадают. В варианте A ESP32 общается со счётчиком на 9600 8N1 по RS-485, а с модемом на 9600 8N1 по второму UART.</p>
+<p>Прошивка ESP32 для варианта A по сути повторяет уже готовый скетч <code>esp32-meter-mqtt-Ci-2</code>: вместо WiFi + MQTT — цикл «Modbus-запрос → ответ → <code>AT+SEND</code>». Ответ счётчика отправляется целиком, вместе с CRC, чтобы декодер мог его проверить.</p>
+
+<h2 id="s2"><span class="step">ШАГ 2</span>LoRaWAN: регистрация на Вега БС-1.2</h2>
+
+<h3 id="s2-keys">Активация и ключи</h3>
+<p>Используй <b>OTAA</b>. ABP работает, но после перезагрузки модема счётчики кадров сбиваются, и сервер молча отбрасывает пакеты. Для OTAA нужны три значения:</p>
+<div class="tbl"><table>
+<tr><th>Ключ</th><th>Размер</th><th>Откуда</th><th>Куда прописать</th></tr>
+<tr><td>DevEUI</td><td>8 байт (16 hex)</td><td>Наклейка модема, либо <code>AT+DEVEUI?</code></td><td>Модем и сервер, должны совпадать</td></tr>
+<tr><td>JoinEUI (AppEUI)</td><td>8 байт</td><td>Любое значение, часто <code>0000000000000000</code> или из наклейки</td><td>Модем и сервер</td></tr>
+<tr><td>AppKey</td><td>16 байт (32 hex)</td><td>Наклейка или сгенерировать самому</td><td>Модем и сервер</td></tr>
+</table></div>
+<p>Регион <b>RU864</b>, класс устройства <b>A</b> (модем спит между отправками, для опроса раз в час это правильно). Класс C нужен только если хочешь слать команды в счётчик по инициативе сервера. Версия LoRaWAN — 1.0.2 или 1.0.3, регион-параметры RP001-1.0.3-A.</p>
+
+<h3 id="s2-at">AT-команды модема (реальный набор EWD95M)</h3>
+<p>Модем отвечает на 9600 8N1. Синтаксис: <code>AT+CMD=?</code> читает значение, <code>AT+CMD=value</code> записывает, <code>AT+CMD?</code> печатает подсказку, <code>AT?</code> выводит весь список. Ответ <code>OK</code> или <code>AT_ERROR</code>. Символы <code>+++</code> не нужны, модем всегда в командном режиме.</p>
+<p>Текущие значения, считанные с модуля:</p>
+<div class="tbl"><table>
+<tr><th>Параметр</th><th>Значение с завода</th><th>Что делать</th></tr>
+<tr><td>DevEUI</td><td><code>0080E1150541872D</code></td><td>оставить, прописать на сервере</td></tr>
+<tr><td>AppEUI / JoinEUI</td><td><code>0000000000000000</code></td><td>оставить или задать своё, одинаково на обеих сторонах</td></tr>
+<tr><td>AppKey = NwkKey</td><td><code>1122334455667788 1122334455667788</code></td><td>заводской демо-ключ, заменить на случайный</td></tr>
+<tr><td>Регион</td><td>был EU868</td><td>переключён на <b>9: RU864</b> и сохранён (<code>NVM DATA STORED</code>)</td></tr>
+<tr><td>RX2</td><td>869.1 МГц, DR0</td><td>выставилось само при смене региона, совпадает с RU864 по умолчанию</td></tr>
+<tr><td>Класс</td><td>A</td><td>оставить для варианта A, <code>AT+CCLASS=C</code> для варианта B</td></tr>
+<tr><td>ADR / DR / мощность</td><td>1 / 0 / 0</td><td>ADR оставить; DR0 = SF12, стартовать можно с <code>AT+CDATARATE=3</code></td></tr>
+</table></div>
+<pre><code>AT+REGION=9                          RU864 (уже сделано и сохранено)
+AT+CAPPEUI=0000000000000000          JoinEUI
+AT+CAPPKEY=&lt;32 hex&gt;                  свой AppKey, сгенерировать случайный
+AT+CNWKKEY=&lt;тот же 32 hex&gt;           для LoRaWAN 1.0.x NwkKey = AppKey
+AT+CCLASS=A
+AT+CADR=1
+AT+CDATARATE=3                       стартовая скорость SF9
+AT+CSAVE                             записать в EEPROM, иначе после AT+RST всё вернётся
+AT+CJOIN=1:1                         OTAA, autojoin=1: присоединяться после перезагрузки сам
+AT+RST                               перезапуск; далее модем сам выполнит Join</code></pre>
+<p>Отправка данных после присоединения: <code>AT+SEND=2:1:0:0103040001E240E2A3</code> — порт 2, одна попытка, без подтверждения, payload в hex. Проверка канала: <code>AT+LINKC</code> добавит Link Check к следующему uplink, ответ покажет запас по сигналу и число услышавших шлюзов.</p>
+<div class="note"><strong>Порядок, чтобы не ловить «Join failed»</strong>
+Сначала завести устройство на сервере (DevEUI, JoinEUI, AppKey, RU864), убедиться, что БС-1.2 онлайн, и только потом давать <code>AT+CJOIN</code>. Модем при неудаче повторяет Join с ростом SF, каждая попытка занимает эфир на секунды.</div>
+
+<h3 id="s2-server">Настройка сервера и шлюза</h3>
+<p><b>Вега БС-1.2.</b> В веб-интерфейсе станции: частотный план RU868 (864.1–870 МГц, каналы по умолчанию 868.9 и 869.1 для Join), режим подключения к серверу — Semtech UDP packet forwarder (порт 1700) для ChirpStack или родной протокол Веги для IOT Vega Server. Убедись, что станция синхронизирована по времени: без NTP/GPS RX-окна для Join Accept уезжают, и устройство не присоединяется.</p>
+<p><b>ChirpStack v4.</b></p>
+<ol>
+<li>Gateways → добавить БС по Gateway ID (EUI станции), регион RU864.</li>
+<li>Device profiles → создать: Region RU864, MAC 1.0.3, Regional params A, Class A, «Supports OTAA» включено. В этот же профиль вставляется декодер из шага 3 (Codec: JavaScript functions).</li>
+<li>Applications → создать приложение → Add device: DevEUI, JoinEUI, профиль. На вкладке OTAA keys — AppKey (в v4 поле называется «Application key», для 1.0.x это тот же NwkKey).</li>
+<li>Вкладка Events: жди <code>join</code>, затем <code>up</code> с полем <code>object</code> — это результат декодера.</li>
+</ol>
+<p><b>IOT Vega Server.</b> Устройства → Добавить → DevEUI, AppEUI, AppKey, OTAA, класс A. Сырой payload приходит в HEX в карточке устройства и в WebSocket/MQTT-интеграции; JavaScript-декодер сервер Веги не исполняет, поэтому тот же скрипт из шага 3 запускается снаружи — в Node-RED или в Python-мосте (см. последний раздел).</p>
+
+<h2 id="s3"><span class="step">ШАГ 3</span>Декодер payload на сервере</h2>
+<p>Декодер не полагается на позицию байтов: он сканирует пакет, находит Modbus-кадр по адресу, функции, длине и совпадению CRC16, и только потом разбирает данные. Так он переживает и служебные байты Ebyte в начале пакета, и мусор в конце. Формат числа выбирается в <code>CONFIG</code> после того, как ты подтвердил его сканом из шага 1.</p>
+<pre><code>// ChirpStack v4 (Device profile → Codec → JavaScript functions)
+// Также совместим с TTN v3: та же функция decodeUplink.
+
+var CONFIG = {
+  slave: 1,            // адрес счётчика в Modbus
+  format: "u32",       // "u32" = целое ×scale, "f32" = float32 big-endian, "f32sw" = float32 со свопом слов
+  scale: 0.01,         // множитель для u32 (0.01 → сотые кВт·ч)
+  extra: {             // необязательно: другие регистры, если опрашиваешь блоком
+    // "voltage_v":  { offset: 16, type: "u16", scale: 0.1 }
+  }
+};
+
+function crc16(bytes, start, end) {
+  var crc = 0xFFFF;
+  for (var i = start; i < end; i++) {
+    crc ^= bytes[i];
+    for (var b = 0; b < 8; b++) crc = (crc & 1) ? ((crc >>> 1) ^ 0xA001) : (crc >>> 1);
+  }
+  return crc & 0xFFFF;
+}
+
+// Ищет валидный кадр ответа Modbus (функция 03/04) в произвольном массиве байт
+function findModbusFrame(bytes, slave) {
+  for (var i = 0; i + 5 <= bytes.length; i++) {
+    if (bytes[i] !== slave) continue;
+    var fn = bytes[i + 1];
+    if (fn !== 0x03 && fn !== 0x04) continue;
+    var n = bytes[i + 2];
+    var end = i + 3 + n + 2;
+    if (end > bytes.length) continue;
+    var crc = crc16(bytes, i, end - 2);
+    var got = bytes[end - 2] | (bytes[end - 1] << 8);   // CRC в кадре: младший байт первым
+    if (crc === got) return { start: i, fn: fn, data: bytes.slice(i + 3, i + 3 + n) };
+  }
+  return null;
+}
+
+function readNumber(data, offset, type) {
+  var dv = new DataView(new Uint8Array(data).buffer);
+  switch (type) {
+    case "u16":   return dv.getUint16(offset, false);
+    case "s16":   return dv.getInt16(offset, false);
+    case "u32":   return dv.getUint32(offset, false);
+    case "s32":   return dv.getInt32(offset, false);
+    case "f32":   return dv.getFloat32(offset, false);
+    case "f32sw": {                                  // словa переставлены: [hi16][lo16] → [lo16][hi16]
+      var sw = [data[offset+2], data[offset+3], data[offset], data[offset+1]];
+      return new DataView(new Uint8Array(sw).buffer).getFloat32(0, false);
+    }
+  }
+  return null;
+}
+
+function decodeUplink(input) {
+  var bytes = input.bytes;
+  var frame = findModbusFrame(bytes, CONFIG.slave);
+  if (!frame) {
+    return { data: { error: "modbus frame not found", raw: toHex(bytes) }, warnings: ["no valid CRC"] };
+  }
+  if (frame.data.length < 4) {
+    return { data: { error: "short response", raw: toHex(bytes) } };
+  }
+  var energy;
+  if (CONFIG.format === "u32") energy = readNumber(frame.data, 0, "u32") * CONFIG.scale;
+  else energy = readNumber(frame.data, 0, CONFIG.format);
+
+  var out = {
+    energy_kwh: Math.round(energy * 100) / 100,
+    fport: input.fPort,
+    modbus_fn: frame.fn,
+    raw: toHex(bytes)
+  };
+  for (var key in CONFIG.extra) {
+    var e = CONFIG.extra[key];
+    if (e.offset + 2 <= frame.data.length) {
+      var v = readNumber(frame.data, e.offset, e.type);
+      if (v !== null) out[key] = Math.round(v * (e.scale || 1) * 1000) / 1000;
+    }
+  }
+  return { data: out };
+}
+
+function toHex(bytes) {
+  var s = "";
+  for (var i = 0; i < bytes.length; i++) s += ("0" + bytes[i].toString(16)).slice(-2);
+  return s;
+}
+
+// Совместимость с ChirpStack v3
+function Decode(fPort, bytes) { return decodeUplink({ bytes: bytes, fPort: fPort }).data; }</code></pre>
+
+<p>Проверочные входы для кнопки «Test» в ChirpStack:</p>
+<div class="tbl"><table>
+<tr><th>Payload (hex)</th><th>format</th><th>Ожидаемый результат</th></tr>
+<tr><td><code>010304 0001E240 E2A3</code></td><td>u32, scale 0.01</td><td><code>{"energy_kwh":1234.56}</code></td></tr>
+<tr><td><code>0011 010304 0001E240 E2A3 FF</code></td><td>u32</td><td>то же: служебные байты спереди и мусор сзади игнорируются</td></tr>
+<tr><td><code>010304 449A51EC F2F1</code></td><td>f32</td><td><code>{"energy_kwh":1234.56}</code></td></tr>
+</table></div>
+
+<div class="ok"><strong>Что считать успехом</strong>
+В событии uplink поле <code>object.energy_kwh</code> совпадает с дисплеем счётчика, а <code>raw</code> начинается с <code>0103</code> (или с пары служебных байт перед ними). Если <code>error: modbus frame not found</code>, посмотри <code>raw</code>: либо модем отправил свой статус вместо ответа счётчика, либо счётчик не ответил, и модем прислал пустой или таймаут-пакет.</div>
+
+<h2 id="ot">Мост в OpenTwins</h2>
+<p>Ditto-маппер на 192.168.0.199 принимает сообщения вида <code>{"device_id":"namespace:name","data":{...}}</code> в топик <code>opentwins/namespace:name</code>. Короткий мост на Python берёт uplink из MQTT ChirpStack (топик <code>application/+/device/+/event/up</code>), уже с полем <code>object</code> от декодера, и перекладывает его в формат OpenTwins:</p>
+<pre><code>import json, paho.mqtt.client as mqtt
+
+CS = ("192.168.0.199", 1883)        # MQTT ChirpStack
+OT = ("192.168.0.199", 30511)       # MQTT OpenTwins
+THING = "lower_lab:ddsd6868"        # twin в Ditto
+
+out = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2); out.connect(*OT); out.loop_start()
+
+def on_up(c, u, m):
+    ev = json.loads(m.payload); obj = ev.get("object") or {}
+    if "energy_kwh" not in obj: return
+    data = {"active_energy_positive_kwh": obj["energy_kwh"]}
+    for k in ("voltage_v", "current_a", "active_power_w", "frequency_hz"):
+        if k in obj: data[k] = obj[k]
+    out.publish(f"opentwins/{THING}", json.dumps({"device_id": THING, "data": data}))
+
+inp = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2); inp.on_message = on_up
+inp.connect(*CS); inp.subscribe("application/+/device/+/event/up"); inp.loop_forever()</code></pre>
+<p>Для IOT Vega Server тот же мост подписывается на его MQTT/WebSocket, получает HEX и вызывает Python-версию декодера (логика та же: найти кадр по CRC, разобрать uint32/float32). Twin <code>lower_lab:ddsd6868</code> нужно один раз создать в OpenTwins, как созданы <code>oven</code> и <code>compressor</code>.</p>
+</main>
+</div>

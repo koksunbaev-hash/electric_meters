@@ -1,0 +1,34 @@
+[Unit]
+Description=Most ChirpStack -> OpenTwins dlya schetchika DDSD6868
+Documentation=file:///opt/opentwins-bridge/README.md
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/opt/opentwins-bridge
+ExecStart=/usr/bin/python3 /opt/opentwins-bridge/chirpstack_to_opentwins.py
+
+# Адреса брокеров. Поменяй здесь, если они переедут.
+Environment=CHIRPSTACK_MQTT=192.168.8.122:1883
+Environment=OPENTWINS_MQTT=192.168.0.199:30511
+Environment=PYTHONUNBUFFERED=1
+
+# Перезапуск при любом падении, но не чаще раза в 10 секунд
+Restart=always
+RestartSec=10
+
+# Журнал уходит в journald, смотреть командой journalctl -u opentwins-bridge -f
+StandardOutput=journal
+StandardError=journal
+
+# Немного безопасности: службе не нужны права на систему
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/opentwins-bridge
+
+[Install]
+WantedBy=multi-user.target

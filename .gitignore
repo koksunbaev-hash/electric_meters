@@ -1,0 +1,21 @@
+# секреты
+secrets.h
+.env
+*.token
+.grafana_token/
+
+# Python
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# журналы и временные файлы
+*.log
+*.tmp
+~$*
+.DS_Store
+Thumbs.db
+
+# сборка Arduino
+build/
